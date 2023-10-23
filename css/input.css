@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 @layer base{
+
     .form-group {
         margin: 4rem auto;
     }
+
 }

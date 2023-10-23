@@ -8,7 +8,8 @@ module.exports = {
         graphite : "#272f34", // graphite color - primary
         charcoal : "#32393e", // lighter graphite color for contrast
         bogey : "#ffbb1e", // orange color for lower points
-        birdies : "#289ff2" // lightblue color for higher scores
+        birdies : "#289ff2", // lightblue color for higher scores
+        accents : "#22282c"
       }
     },
   },
