@@ -9,6 +9,8 @@ class Player {
 
 let players = []
 
+let poop = "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json"
+
 function createPlayer(name){
   let player = new Player(name)
   players.push(player)
@@ -16,11 +18,8 @@ function createPlayer(name){
 }
 //======== API INTEGRATION FOR THE COURSES ===========
 
-async function getAvailableGolfCourses() {
-    const response = await fetch(
-        "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json",
-        // { mode: "no-cors" }
-    );
+async function getAvailableGolfCourses(url) {
+    const response = await fetch(url);
     return await response.json();
   }
 
@@ -56,44 +55,57 @@ async function getGolfCourseDetails(golfCourseId) {
           `https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/course${golfCourseId}.json`,
         //   { mode: "no-cors" }
       );
-      console.log();
+      // console.log();
       return await response.json();
   }
 
   // This is to add an event listener to the course-select element
-document.getElementById('course-select').addEventListener('change', handleCourseSelectChange)
+document.getElementById('course-options').addEventListener('click', handleCourseSelect)
 
 async function populateCourseSelect(){
     try {
-      let courses = await getAvailableGolfCourses()
-      let populateCourseSelect = document.getElementById('course-select')
+      let courses = await getAvailableGolfCourses(poop)
+      let courseOptionsDiv = document.getElementById('course-options')
 
       // Clear an existing options
-      populateCourseSelect.innerHTML = ''
+      courseOptionsDiv.innerHTML = ''
       
       // Create a default option
-      const defaultOption = document.createElement('option')
-      defaultOption.value = ''
-      defaultOption.text = 'Select A Golf Course'
-      populateCourseSelect.appendChild(defaultOption)
-
-
-      let courseOptionHtml = ''
-      courses.forEach((course) => {
-          courseOptionHtml += `<option value ="${course.id}">${course.name}</option>`
-          
-      })
-
-      // Set the inner HTML of the select element
-      populateCourseSelect.innerHTML += courseOptionHtml
-
-      
-      console.log(courses)
-      console.log(courseOptionHtml)
-    }catch (error){
-        console.error('Error fetching and population golf courses:', error)
-    }
+      courses.forEach(async(course) =>{
+      let _course = await getAvailableGolfCourses(course.url)
     
+      const courseDiv = document.createElement('div')
+      courseDiv.className = "course-option m-5 text-center text-black"
+
+      const thumbnailImg = document.createElement('img')
+      thumbnailImg.setAttribute('src', _course.thumbnail)
+      thumbnailImg.alt = 'Thumbnail'
+      thumbnailImg.className = "object-cover w-full h-full"
+      // thumbnailImg.crossOrigin = 'anonymous'
+        // console.log(_course.thumbnail)
+      courseDiv.appendChild(thumbnailImg)
+      const courseName = document.createElement('div')
+      courseName.textContent = _course.name
+      courseName.className = 'courseName p-3 bg-lime'
+
+      courseDiv.appendChild(courseName)
+      // courseDiv.appendChild(document.createTextNode(_course.name))
+
+      courseDiv.addEventListener('click', () => handleCourseSelect(_course.id))
+      courseOptionsDiv.appendChild(courseDiv)
+      })
+      
+
+      console.log(courses)
+    } catch (error){
+        console.error('Error fetching and population golf courses:', error)
+    }   
 } 
+
+function handleCourseSelect(courseId) {
+  if (courseId) {
+    console.log('selected golf course: ', courseId)
+  }
+}
 
 window.addEventListener('load', populateCourseSelect)
