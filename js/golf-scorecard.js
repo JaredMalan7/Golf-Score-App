@@ -9,7 +9,7 @@ class Player {
 
 let players = []
 
-let poop = "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json"
+let coursesURL = "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json"
 
 function createPlayer(name){
   let player = new Player(name)
@@ -53,7 +53,7 @@ async function handleCourseSelectChange(){
 async function getGolfCourseDetails(golfCourseId) {
     const response = await fetch(
           `https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/course${golfCourseId}.json`,
-        //   { mode: "no-cors" }
+
       );
       // console.log();
       return await response.json();
@@ -64,7 +64,7 @@ document.getElementById('course-options').addEventListener('click', handleCourse
 
 async function populateCourseSelect(){
     try {
-      let courses = await getAvailableGolfCourses(poop)
+      let courses = await getAvailableGolfCourses(coursesURL)
       let courseOptionsDiv = document.getElementById('course-options')
 
       // Clear an existing options
@@ -81,7 +81,6 @@ async function populateCourseSelect(){
       thumbnailImg.setAttribute('src', _course.thumbnail)
       thumbnailImg.alt = 'Thumbnail'
       thumbnailImg.className = "object-cover w-full h-full"
-      // thumbnailImg.crossOrigin = 'anonymous'
         // console.log(_course.thumbnail)
       courseDiv.appendChild(thumbnailImg)
       const courseName = document.createElement('div')
