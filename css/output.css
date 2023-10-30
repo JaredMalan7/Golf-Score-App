@@ -670,3 +670,9 @@ video {
     flex-direction: row;
   }
 }
+
+@media (min-width: 1024px) {
+  .lg\:flex-row {
+    flex-direction: row;
+  }
+}
