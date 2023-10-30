@@ -90,12 +90,16 @@ async function populateCourseSelect(){
       courseDiv.appendChild(courseName)
       // courseDiv.appendChild(document.createTextNode(_course.name))
 
-      courseDiv.addEventListener('click', () => handleCourseSelect(_course.id))
+      courseDiv.addEventListener('click', () =>{
+        createPlayerSelection()
+        handleCourseSelect(_course.id)
+      })
       courseOptionsDiv.appendChild(courseDiv)
       })
       
 
       console.log(courses)
+      // createPlayerSelection() //THIS COULD BE USED TO MAINTAIN IT ACTIVE WHILE STYLING THE PLAYER SELECTION
     } catch (error){
         console.error('Error fetching and population golf courses:', error)
     }   
@@ -108,3 +112,23 @@ function handleCourseSelect(courseId) {
 }
 
 window.addEventListener('load', populateCourseSelect)
+
+
+function createPlayerSelection(){
+  let playerSelection = document.createElement('div')
+  playerSelection.className = 'player-selection text-center flex flex-wrap sm:w-1/2 md:w-1/2 md:ml-auto md:mr-auto justify-center'
+  for (let i = 1; i <=4; i++){
+    let playerOption = document.createElement('div')
+    playerOption.className = 'player-option w-fit bg-lime p-14 m-4 font-bold text-lg'
+    playerOption.textContent = i
+
+    playerOption.addEventListener('click', () =>{
+      let selectedPlayers = i
+      console.log('selected players: ', selectedPlayers)
+    })
+    playerSelection.appendChild(playerOption)
+  }
+
+  let playerSelectionContainer = document.getElementById('player-selection-container')
+  playerSelectionContainer.appendChild(playerSelection)
+}
