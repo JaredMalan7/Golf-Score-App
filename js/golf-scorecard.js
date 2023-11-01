@@ -97,7 +97,6 @@ function handleCourseSelect(courseId) {
 
 window.addEventListener('load', populateCourseSelect)
 
-
 // ==== FUNCTINO TO RENDER THE TEEBOXES =====
 async function renderTeeBoxes(courseId) {
   try {
@@ -115,7 +114,7 @@ async function renderTeeBoxes(courseId) {
           // Added this condition here so that the Auto Change location teeType is not displayed
           if (teeBox.teeType !== "auto change location") {
             const teeBoxDiv = document.createElement('div')
-            teeBoxDiv.className = 'bg-lime m-4 sm:w-full md:w-1/3 p-12'
+            teeBoxDiv.className = 'bg-lime m-4 sm:w-full md:w-1/3 p-12 font-bold'
             teeBoxDiv.textContent = teeBox.teeType
             teeBoxContainer.appendChild(teeBoxDiv)
 
@@ -135,3 +134,4 @@ async function renderTeeBoxes(courseId) {
     console.error('Error rendering teeBoxes:', error)
   }
 }
+
