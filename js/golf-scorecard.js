@@ -41,10 +41,18 @@ async function fetchCourseData(courseId) {
 async function populateCourseSelect() {
   try {
     const courses = await myFetch(coursesURL)
+    const courseContainer = document.getElementById('courses-container')
     const courseOptionsDiv = document.getElementById('course-options')
-
+    
     // Clear an existing options
     courseOptionsDiv.innerHTML = ''
+
+
+    // COURSE HEADING
+    const courseHeading = document.createElement('h1')
+    courseHeading.textContent = 'Choose Your Course'
+    courseHeading.className = 'w-full mt-7 mb-8 font-bold'
+    courseContainer.appendChild(courseHeading)  
 
     // Create a default option
     courses.forEach(async (course) => {
@@ -53,9 +61,8 @@ async function populateCourseSelect() {
         // logs all the details of each course
         // console.log("Course Details:", _course)
 
-
         const courseDiv = document.createElement('div')
-        courseDiv.className = "course-option m-5 text-center text-black"
+        courseDiv.className = "overflow-hidden course-option m-5 text-center text-black grow md:h-full"
 
         //===EVENT LISTENER TO LOG THE SELECTED COURSE=====
         courseDiv.addEventListener('click', () => {
@@ -68,12 +75,12 @@ async function populateCourseSelect() {
         const thumbnailImg = document.createElement('img')
         thumbnailImg.setAttribute('src', _course.thumbnail)
         thumbnailImg.alt = 'Thumbnail'
-        thumbnailImg.className = "object-cover w-full h-full"
+        thumbnailImg.className = "thumbnail object-cover object-center max-h-[125px] min-w-[256px]"
         courseDiv.appendChild(thumbnailImg)
 
         const courseName = document.createElement('div')
         courseName.textContent = _course.name
-        courseName.className = 'courseName p-3 bg-lime'
+        courseName.className = 'courseName p-3 bg-lime max-w-[256px]'
         courseDiv.appendChild(courseName)
 
         courseOptionsDiv.appendChild(courseDiv)
@@ -109,12 +116,20 @@ async function renderTeeBoxes(courseId) {
       const teeBoxContainer = document.getElementById('teebox-container')
       teeBoxContainer.innerHTML = ''
 
+      // TEE BOX HEADING
+      const teeBoxHeading = document.createElement('h1')
+      teeBoxHeading.textContent = 'Choose Your Tee Box'
+      teeBoxHeading.className = 'w-full m-8'
+      teeBoxContainer.appendChild(teeBoxHeading)
+
+
       if (firstHole.teeBoxes && firstHole.teeBoxes.length > 0) {
         firstHole.teeBoxes.forEach((teeBox, teeBoxIndex) => {
           // Added this condition here so that the Auto Change location teeType is not displayed
           if (teeBox.teeType !== "auto change location") {
+            
             const teeBoxDiv = document.createElement('div')
-            teeBoxDiv.className = 'teebox-option bg-lime m-4 sm:w-full md:w-1/3 p-12 font-bold'
+            teeBoxDiv.className = 'teebox-option bg-lime m-4 w-2/6 p-5 font-bold text-black'
             teeBoxDiv.textContent = teeBox.teeType
             teeBoxContainer.appendChild(teeBoxDiv)
 
@@ -129,7 +144,7 @@ async function renderTeeBoxes(courseId) {
               console.log('Selected Tee Box:', capitalizedTeeType)
               renderPlayerOptions()
             })
-
+            
             teeBoxContainer.appendChild(teeBoxDiv)
           }
         })
@@ -141,6 +156,7 @@ async function renderTeeBoxes(courseId) {
     console.error('Error rendering teeBoxes:', error)
   }
 }
+
 
 //==== FUNCTION TO CALL & RENDER THE PLAYER OPTIONS AFTER THE TEEBOX WAS SELECTED ====
 function handleTeeBoxSelect(teeBox) {
@@ -154,9 +170,17 @@ function renderPlayerOptions() {
   const playerSelectionContainer = document.getElementById('player-selection-container') // Use the correct ID
   playerSelectionContainer.innerHTML = '' // Clear existing options
 
+
+  // COURSE HEADING
+  const playerSelectHeading = document.createElement('h1')
+  playerSelectHeading.textContent = 'Choose Your Course'
+  playerSelectHeading.className = 'w-full mt-7 mb-8 font-bold'
+  playerSelectionContainer.appendChild(playerSelectHeading)    
+
+
   for (let i = 1; i <= 4; i++) {
     const playerOption = document.createElement('div')
-    playerOption.className = 'text-center player-option bg-lime p-10 m-4 font-bold text-lg w-1/3'
+    playerOption.className = 'text-center player-option bg-lime p-10 m-4 font-bold text-lg w-1/3 text-black'
     playerOption.textContent = i
 
     playerOption.addEventListener('click', () => {
@@ -167,4 +191,4 @@ function renderPlayerOptions() {
   }
 }
 
-renderPlayerOptions()
+// renderPlayerOptions()
