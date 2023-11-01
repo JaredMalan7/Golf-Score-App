@@ -97,7 +97,7 @@ function handleCourseSelect(courseId) {
 
 window.addEventListener('load', populateCourseSelect)
 
-// ==== FUNCTINO TO RENDER THE TEEBOXES =====
+// ==== FUNCTION TO RENDER THE TEEBOXES =====
 async function renderTeeBoxes(courseId) {
   try {
     const courseURL = `https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/course${courseId}.json`
@@ -114,7 +114,7 @@ async function renderTeeBoxes(courseId) {
           // Added this condition here so that the Auto Change location teeType is not displayed
           if (teeBox.teeType !== "auto change location") {
             const teeBoxDiv = document.createElement('div')
-            teeBoxDiv.className = 'bg-lime m-4 sm:w-full md:w-1/3 p-12 font-bold'
+            teeBoxDiv.className = 'teebox-option bg-lime m-4 sm:w-full md:w-1/3 p-12 font-bold'
             teeBoxDiv.textContent = teeBox.teeType
             teeBoxContainer.appendChild(teeBoxDiv)
 
@@ -122,6 +122,13 @@ async function renderTeeBoxes(courseId) {
             // Capitalize the first letter of teeType
             const capitalizedTeeType = teeBox.teeType.charAt(0).toUpperCase() + teeBox.teeType.slice(1)
             teeBoxDiv.textContent = capitalizedTeeType
+
+
+            // Add an event listener to each teeBox
+            teeBoxDiv.addEventListener('click', () => {
+              console.log('Selected Tee Box:', capitalizedTeeType)
+              renderPlayerOptions()
+            })
 
             teeBoxContainer.appendChild(teeBoxDiv)
           }
@@ -135,3 +142,29 @@ async function renderTeeBoxes(courseId) {
   }
 }
 
+//==== FUNCTION TO CALL & RENDER THE PLAYER OPTIONS AFTER THE TEEBOX WAS SELECTED ====
+function handleTeeBoxSelect(teeBox) {
+  console.log('Selected Tee Type:', teeBox.teeType)
+  if (teeBox.teeType) {
+    renderPlayerOptions()
+  }
+}
+
+function renderPlayerOptions() {
+  const playerSelectionContainer = document.getElementById('player-selection-container') // Use the correct ID
+  playerSelectionContainer.innerHTML = '' // Clear existing options
+
+  for (let i = 1; i <= 4; i++) {
+    const playerOption = document.createElement('div')
+    playerOption.className = ' text-center player-option bg-lime p-14 m-4 font-bold text-lg m:w-full md:w-1/3'
+    playerOption.textContent = i
+
+    playerOption.addEventListener('click', () => {
+      console.log('Selected Players:', i)
+    })
+
+    playerSelectionContainer.appendChild(playerOption)
+  }
+}
+
+renderPlayerOptions()
