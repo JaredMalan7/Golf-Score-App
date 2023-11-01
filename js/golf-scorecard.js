@@ -13,7 +13,25 @@ async function fetchCourseData(courseId) {
 
     const courseData = await myFetch(courseURL)
 
+   // ==== THIS LOGS THE ENTIRE DATA OF THE COURSE OBJECT ====
     console.log('Fetched Course Data: ', courseData)
+
+    if (courseData.holes) {
+      courseData.holes.forEach((hole, holeIndex) => {
+        if (hole.teeBoxes) {
+          hole.teeBoxes.forEach((teeBox, teeBoxIndex) => {
+            console.log(`Tee Box ${teeBoxIndex + 1}:`)
+            console.log('Tee Type:', teeBox.teeType)
+            console.log('Par:', teeBox.par)
+            console.log('Yards:', teeBox.yards)
+            console.log('Hcp:', teeBox.hcp)
+            console.log('--------')
+          })
+          console.log('--------')
+        }
+      })
+    }
+
   } catch (error) {
     console.error('Error fetching course data: ', error)
   }
@@ -32,11 +50,20 @@ async function populateCourseSelect() {
     courses.forEach(async (course) => {
       try {
         let _course = await myFetch(course.url)
-        console.log("Course Details:", _course)
+        // logs all the details of each course
+        // console.log("Course Details:", _course)
 
 
         const courseDiv = document.createElement('div')
         courseDiv.className = "course-option m-5 text-center text-black"
+
+        //===EVENT LISTENER TO LOG THE SELECTED COURSE=====
+        courseDiv.addEventListener('click', () => {
+          console.log("Selected golf course:", _course.id)
+          fetchCourseData(_course.id)
+
+          renderTeeBoxes(_course.id)
+        })
 
         const thumbnailImg = document.createElement('img')
         thumbnailImg.setAttribute('src', _course.thumbnail)
@@ -56,7 +83,7 @@ async function populateCourseSelect() {
     })
 
     // This console logs the expected courses in the console
-    // console.log(courses)
+    console.log(courses)
   } catch (error) {
     console.error('Error fetching and populating golf courses:', error)
   }
@@ -69,3 +96,42 @@ function handleCourseSelect(courseId) {
 }
 
 window.addEventListener('load', populateCourseSelect)
+
+
+// ==== FUNCTINO TO RENDER THE TEEBOXES =====
+async function renderTeeBoxes(courseId) {
+  try {
+    const courseURL = `https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/course${courseId}.json`
+    const courseData = await myFetch(courseURL)
+
+    if (courseData.holes && courseData.holes.length > 0) {
+      const firstHole = courseData.holes[0]
+
+      const teeBoxContainer = document.getElementById('teebox-container')
+      teeBoxContainer.innerHTML = ''
+
+      if (firstHole.teeBoxes && firstHole.teeBoxes.length > 0) {
+        firstHole.teeBoxes.forEach((teeBox, teeBoxIndex) => {
+          // Added this condition here so that the Auto Change location teeType is not displayed
+          if (teeBox.teeType !== "auto change location") {
+            const teeBoxDiv = document.createElement('div')
+            teeBoxDiv.className = 'bg-lime m-4 sm:w-full md:w-1/3 p-12'
+            teeBoxDiv.textContent = teeBox.teeType
+            teeBoxContainer.appendChild(teeBoxDiv)
+
+
+            // Capitalize the first letter of teeType
+            const capitalizedTeeType = teeBox.teeType.charAt(0).toUpperCase() + teeBox.teeType.slice(1)
+            teeBoxDiv.textContent = capitalizedTeeType
+
+            teeBoxContainer.appendChild(teeBoxDiv)
+          }
+        })
+      }
+    } else {
+      console.log('No holes found for the selected course.')
+    }
+  } catch (error) {
+    console.error('Error rendering teeBoxes:', error)
+  }
+}
