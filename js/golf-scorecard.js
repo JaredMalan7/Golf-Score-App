@@ -156,7 +156,7 @@ function renderPlayerOptions() {
 
   for (let i = 1; i <= 4; i++) {
     const playerOption = document.createElement('div')
-    playerOption.className = ' text-center player-option bg-lime p-14 m-4 font-bold text-lg m:w-full md:w-1/3'
+    playerOption.className = 'text-center player-option bg-lime p-10 m-4 font-bold text-lg w-1/3'
     playerOption.textContent = i
 
     playerOption.addEventListener('click', () => {
