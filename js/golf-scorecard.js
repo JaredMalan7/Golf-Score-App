@@ -1,3 +1,4 @@
+
 //===== GLOBAL VARIABLE TO THE API LINK THAT CONTAINS THE GOLF COURSES ==========
 let coursesURL = "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json"
 
@@ -119,7 +120,7 @@ async function renderTeeBoxes(courseId) {
       // TEE BOX HEADING
       const teeBoxHeading = document.createElement('h1')
       teeBoxHeading.textContent = 'Choose Your Tee Box'
-      teeBoxHeading.className = 'w-full m-8'
+      teeBoxHeading.className = 'w-full m-8 font-bold'
       teeBoxContainer.appendChild(teeBoxHeading)
 
 
@@ -166,6 +167,28 @@ function handleTeeBoxSelect(teeBox) {
   }
 }
 
+
+// CLASS PLAYER USED TO GENERATE THE PLAYERS
+let nextPlayerId = 1
+
+function getNextId(){
+  return nextPlayerId++
+}
+
+class Player {
+  constructor(name, id = getNextId(), scores = []) {
+    this.name = name;
+    this.id = id;
+    this.scores = scores;
+  }
+}
+
+// SETS A GLOBAL VARIABLE FOR THE NUMBER OF PLAYERS, INITIALLY AT 0
+// UNTIL THE NUMBER OF PLAYERS IS SELECTED
+let numberOfPlayers = 0
+
+let players = []
+
 function renderPlayerOptions() {
   const playerSelectionContainer = document.getElementById('player-selection-container') // Use the correct ID
   playerSelectionContainer.innerHTML = '' // Clear existing options
@@ -180,15 +203,30 @@ function renderPlayerOptions() {
 
   for (let i = 1; i <= 4; i++) {
     const playerOption = document.createElement('div')
-    playerOption.className = 'text-center player-option bg-lime p-10 m-4 font-bold text-lg w-1/3 text-black'
+    playerOption.className = 'player-option text-center bg-lime p-10 m-4 font-bold text-lg w-1/3 text-black'
     playerOption.textContent = i
 
     playerOption.addEventListener('click', () => {
-      console.log('Selected Players:', i)
+      numberOfPlayers = parseInt(playerOption.textContent) // this updates the global variable
+      console.log('Selected Players:', numberOfPlayers)
+      generatePlayers()
     })
 
     playerSelectionContainer.appendChild(playerOption)
   }
 }
-
 // renderPlayerOptions()
+
+function generatePlayers() {
+  players = [] // Clear the existing players
+
+  for (let i = 1; i <= numberOfPlayers; i++) {
+    const playerName = `Player ${i}`
+    const player = new Player(playerName)
+    players.push(player)
+  }
+
+  console.log(`Generated ${numberOfPlayers} players:`)
+  console.log(players)
+}
+
