@@ -171,7 +171,6 @@ async function renderTeeBoxes(courseId) {
 
 //==== FUNCTION TO CALL & RENDER THE PLAYER OPTIONS AFTER THE TEEBOX WAS SELECTED ====
 let selectedTeeBox = null
-
 function handleTeeBoxSelect(teeBox) {
   console.log('Selected Tee Type:', teeBox.teeType)
   if (teeBox.teeType) {
@@ -201,6 +200,7 @@ let numberOfPlayers = 0
 
 let players = []
 
+// RENDERS THE 4 SQUARE BUTTON FOR THE USER TO SELECT THE NUMBER OF PLAYERS
 function renderPlayerOptions() {
   const playerSelectionContainer = document.getElementById('player-selection-container') // Use the correct ID
   playerSelectionContainer.innerHTML = '' // Clear existing options
@@ -230,6 +230,7 @@ function renderPlayerOptions() {
 }
 // renderPlayerOptions()
 
+// GENERATES PLAYER OBJECTS FOR THE SCORECARD TABLE
 function generatePlayers() {
   players = [] // Clear the existing players
 
@@ -246,60 +247,66 @@ function generatePlayers() {
 }
 
 //FUNCTION THAT BUILDS THE SCORECARD
-
 function renderScorecardTable() {
   const scorecardContainer = document.getElementById('scorecard-container')
   scorecardContainer.innerHTML = '' // Clear any existing content
 
-  const table = document.createElement('table')
-  table.classList.add('table', 'w-full')
-  table.id = 'frontHole'
+  const frontTable = document.createElement('table')
+  frontTable.classList.add('table', 'w-full')
+  frontTable.id = 'frontHole'
 
-  // Create the Hole row
-  const holeRow = document.createElement('tr')
-  holeRow.classList.add('text-sm')
+  if (courseData && courseData.holes && courseData.holes.length >= 9) {
+    // Create the Hole row
+    const holeRow = document.createElement('tr')
+    holeRow.classList.add('text-sm')
 
-  const holeHeader = document.createElement('th')
-  holeHeader.classList.add('p-2', 'font-normal')
-  holeHeader.textContent = 'Hole'
-  holeRow.appendChild(holeHeader)
+    const holeHeader = document.createElement('th')
+    holeHeader.classList.add('p-2', 'font-normal')
+    holeHeader.textContent = 'Hole'
+    holeRow.appendChild(holeHeader)
 
-  for (let i = 1; i <= 18; i++) {
-    const holeColumn = document.createElement('th')
-    holeColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    holeColumn.textContent = i
-    holeRow.appendChild(holeColumn)
+    for (let i = 0; i < 9; i++) {
+      const holeColumn = document.createElement('th')
+      holeColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+      holeColumn.textContent = i + 1 // Display numbers 1 through 9
+      holeRow.appendChild(holeColumn)
+    }
+
+    // Add the "Total" column
+    const totalColumn = document.createElement('th')
+    totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    totalColumn.textContent = 'Total' // Display "Total"
+    holeRow.appendChild(totalColumn)
+
+    frontTable.appendChild(holeRow)
+  } else {
+    console.log('Course data does not have enough holes for the front 9.')
+    return
   }
-
-  // Add the "Total" column
-  const totalColumn = document.createElement('th')
-  totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  totalColumn.textContent = 'Total'
-  holeRow.appendChild(totalColumn)
-
-  table.appendChild(holeRow)
 
   // Create the Yardage row
   const yardageRow = document.createElement('tr')
   yardageRow.classList.add('text-sm', 'bg-charcoal')
 
   const yardageHeader = document.createElement('th')
-  yardageHeader.classList.add('p-2', 'font-normal', 'bg-charcoal') 
-  yardageHeader.textContent = 'Yardage'
+  yardageHeader.classList.add('p-2', 'font-normal', 'bg-charcoal')
+    yardageHeader.textContent = 'Yardage'
   yardageRow.appendChild(yardageHeader)
 
-  for (let i = 1; i <= 18; i++) {
+  for (let i = 0; i < 9; i++) {
+    const hole = courseData.holes[i]
     const yardageColumn = document.createElement('th')
     yardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    yardageColumn.textContent = hole.yards
     yardageRow.appendChild(yardageColumn)
   }
 
-   // Add an empty column for the "Total" row
-   const emptyTotalyardageColumn = document.createElement('th')
-   emptyTotalyardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-   yardageRow.appendChild(emptyTotalyardageColumn)
+  // Add an empty column for the "Total" row
+  const emptyTotalYardageColumn = document.createElement('th')
+  emptyTotalYardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+  yardageRow.appendChild(emptyTotalYardageColumn)
 
-  table.appendChild(yardageRow)
+  frontTable.appendChild(yardageRow)
 
   // Create the Par row with the same number of columns as Yardage
   const parRow = document.createElement('tr')
@@ -310,9 +317,11 @@ function renderScorecardTable() {
   parHeader.textContent = 'Par'
   parRow.appendChild(parHeader)
 
-  for (let i = 1; i <= 18; i++) {
+  for (let i = 0; i < 9; i++) {
+    const hole = courseData.holes[i]
     const parColumn = document.createElement('th')
     parColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    parColumn.textContent = hole.holePar
     parRow.appendChild(parColumn)
   }
 
@@ -321,7 +330,7 @@ function renderScorecardTable() {
   emptyTotalParColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
   parRow.appendChild(emptyTotalParColumn)
 
-  table.appendChild(parRow)
+  frontTable.appendChild(parRow)
 
   // Create the Handicap row with the same number of columns as Yardage
   const handicapRow = document.createElement('tr')
@@ -332,9 +341,11 @@ function renderScorecardTable() {
   handicapHeader.textContent = 'Handicap'
   handicapRow.appendChild(handicapHeader)
 
-  for (let i = 1; i <= 18; i++) {
+  for (let i = 0; i < 9; i++) {
+    const hole = courseData.holes[i]
     const handicapColumn = document.createElement('th')
     handicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    handicapColumn.textContent = hole.holeHandicap
     handicapRow.appendChild(handicapColumn)
   }
 
@@ -343,41 +354,41 @@ function renderScorecardTable() {
   emptyTotalHandicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
   handicapRow.appendChild(emptyTotalHandicapColumn)
 
-  table.appendChild(handicapRow)
+  frontTable.appendChild(handicapRow)
 
   // Create player rows based on the number of objects in the players array
-players.forEach((player) => {
-  const playerRow = document.createElement('tr')
-  playerRow.classList.add('text-sm')
-  playerRow.id = `player${player.id}`
+  players.forEach((player) => {
+    const playerRow = document.createElement('tr')
+    playerRow.classList.add('text-sm')
 
-  if (player.id === 2 || player.id === 4) {
-    playerRow.classList.add('bg-charcoal');
-  }
+    if (players.indexOf(player) % 2 != 0) {
+      playerRow.classList.add('bg-charcoal')
+    }
 
-  const playerHeader = document.createElement('th')
-  playerHeader.classList.add('p-2', 'font-normal')
-  playerHeader.textContent = player.name
-  playerRow.appendChild(playerHeader)
+    const playerHeader = document.createElement('th')
+    playerHeader.classList.add('p-2', 'font-normal')
+    playerHeader.textContent = player.name
+    playerRow.appendChild(playerHeader)
 
-  for (let j = 1; j <= 18; j++) {
-    const playerColumn = document.createElement('th')
-    playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    playerRow.appendChild(playerColumn)
-  }
+    for (let i = 0; i < 9; i++) {
+      const playerColumn = document.createElement('th')
+      playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+      // You need to add player scores here
+      playerColumn.textContent = player.scores[i] // Adjust the index
+      playerRow.appendChild(playerColumn)
+    }
 
-  // Add an empty column for the "Total" row
-  const emptyTotalPlayerColumn = document.createElement('th')
-  emptyTotalPlayerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  playerRow.appendChild(emptyTotalPlayerColumn)
+    // Add an empty column for the "Total" row
+    const emptyTotalPlayerColumn = document.createElement('th')
+    emptyTotalPlayerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    // You need to calculate and add the player's total score here
+    emptyTotalPlayerColumn.textContent = player.scores.slice(0, 9).reduce((total, score) => total + score, 0)
+    playerRow.appendChild(emptyTotalPlayerColumn)
 
-  table.appendChild(playerRow)
-})
+    frontTable.appendChild(playerRow)
+  })
 
-  scorecardContainer.appendChild(table)
+  scorecardContainer.appendChild(frontTable)
 }
-
-// Call the function to render the scorecard table
-
-
+// Call the function to render the scorecard tables
 renderScorecardTable()
