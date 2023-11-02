@@ -21,5 +21,131 @@
 
    <!-- PLAYER SELECTION CONTAINER -->
    <div id="player-selection-container" class="mt-10 text-center flex flex-wrap md:ml-auto md:mr-auto justify-center place-items-center"></div>
+
+
+   <div class="container">
+    <!-- <div class="row w-full">
+        <div class="col-span-12 p-2 mt-2" id="header"> </div>
+    </div>
+    <div class="row">
+        <div class="col-span-12-t-0-b-0">
+            <div class="bg-charcoal p-2" id="options-container">Let's Play Some Golf!</div>
+        </div>
+    </div> -->
+
+    <div class="row" id="scorecard-container">
+        <div class="col-span-12-t-0 w-full" id="scorecard">
+            <!--=====FRONT NINE====-->
+            <div class="table-auto">
+                <table class="table w-full" id="frontHole">
+                    <tr class="text-sm">
+                        <th class="p-2 font-normal">Hole</th>
+                        <th class="p-2 font-normal border-l border-l-accents">1</th>
+                        <th class="p-2 font-normal border-l border-l-accents">2</th>
+                        <th class="p-2 font-normal border-l border-l-accents">3</th>
+                        <th class="p-2 font-normal border-l border-l-accents">4</th>
+                        <th class="p-2 font-normal border-l border-l-accents">5</th>
+                        <th class="p-2 font-normal border-l border-l-accents">6</th>
+                        <th class="p-2 font-normal border-l border-l-accents">7</th>
+                        <th class="p-2 font-normal border-l border-l-accents">8</th>
+                        <th class="p-2 font-normal border-l border-l-accents">9</th>
+                        <th class="p-2 font-normal border-l border-l-accents">Total</th>
+                    </tr>
+                    <tr class="text-sm bg-charcoal">
+                        <th class="p-2 font-normal">Yardage</th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+                    <tr class="text-sm">
+                        <th class="p-2 font-normal">Par</th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+                    <tr class="text-sm bg-charcoal">
+                        <th class="p-2 font-normal">Handicap</th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+                    <tr class="text-sm" id="player1">
+                        <th class="p-2 font-normal"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+                    
+                    <tr class="text-sm bg-charcoal" id="player2">
+                        <th class="p-2 font-normal"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+
+                    <tr class="text-sm" id="player3">
+                        <th class="p-2 font-normal"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+                    <tr class="text-sm bg-charcoal" id="player4">
+                        <th class="p-2 font-normal"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                        <th class="p-2 font-normal border-l border-l-accents"></th>
+                    </tr>
+                </table>
+            </div>
 </body>
 </html>                                                                                                                             
