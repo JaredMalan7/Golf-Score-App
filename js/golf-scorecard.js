@@ -153,6 +153,7 @@ async function renderTeeBoxes(courseId) {
             // Add an event listener to each teeBox
             teeBoxDiv.addEventListener('click', () => {
               console.log('Selected Tee Box:', capitalizedTeeType)
+              handleTeeBoxSelect(teeBox)
               renderPlayerOptions()
             })
             
@@ -170,14 +171,17 @@ async function renderTeeBoxes(courseId) {
 
 
 //==== FUNCTION TO CALL & RENDER THE PLAYER OPTIONS AFTER THE TEEBOX WAS SELECTED ====
-let selectedTeeBox = null
 function handleTeeBoxSelect(teeBox) {
   console.log('Selected Tee Type:', teeBox.teeType)
+  selectedTeeBox = teeBox.teeType // Update selectedTeeBox
+  console.log('Updated selectedTeeBox:', selectedTeeBox) // Log the updated value
   if (teeBox.teeType) {
-    renderScorecard(courseData, teeBox.teeType)
+    console.log('About to call renderScorecardTable with selectedTeeBox:', selectedTeeBox)
+    renderScorecardTable(); // Render the scorecard with the updated selectedTeeBox
+  } else {
+    console.log('teeBox.teeType is not available.')
   }
 }
-
 
 // CLASS PLAYER USED TO GENERATE THE PLAYERS
 let nextPlayerId = 1
@@ -285,76 +289,101 @@ function renderScorecardTable() {
   }
 
   // Create the Yardage row
-  const yardageRow = document.createElement('tr')
-  yardageRow.classList.add('text-sm', 'bg-charcoal')
+const yardageRow = document.createElement('tr')
+yardageRow.classList.add('text-sm', 'bg-charcoal')
 
-  const yardageHeader = document.createElement('th')
-  yardageHeader.classList.add('p-2', 'font-normal', 'bg-charcoal')
-    yardageHeader.textContent = 'Yardage'
-  yardageRow.appendChild(yardageHeader)
+const yardageHeader = document.createElement('th')
+yardageHeader.classList.add('p-2', 'font-normal', 'bg-charcoal')
+yardageHeader.textContent = 'Yardage'
+yardageRow.appendChild(yardageHeader)
 
-  for (let i = 0; i < 9; i++) {
-    const hole = courseData.holes[i]
+for (let i = 0; i < 9; i++) {
+  const hole = courseData.holes[i]
+  const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
+
+  if (teeBox) {
     const yardageColumn = document.createElement('th')
     yardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    yardageColumn.textContent = hole.yards
+    yardageColumn.textContent = teeBox.yards
     yardageRow.appendChild(yardageColumn)
+  } else {
+    const emptyYardageColumn = document.createElement('th')
+    emptyYardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    yardageRow.appendChild(emptyYardageColumn)
   }
+}
 
-  // Add an empty column for the "Total" row
-  const emptyTotalYardageColumn = document.createElement('th')
-  emptyTotalYardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  yardageRow.appendChild(emptyTotalYardageColumn)
+// Add an empty column for the "Total" row
+const emptyTotalYardageColumn = document.createElement('th')
+emptyTotalYardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+yardageRow.appendChild(emptyTotalYardageColumn)
 
-  frontTable.appendChild(yardageRow)
+frontTable.appendChild(yardageRow)
 
-  // Create the Par row with the same number of columns as Yardage
-  const parRow = document.createElement('tr')
-  parRow.classList.add('text-sm')
+// Create the Par row with the same number of columns as Yardage
+const parRow = document.createElement('tr')
+parRow.classList.add('text-sm')
 
-  const parHeader = document.createElement('th')
-  parHeader.classList.add('p-2', 'font-normal')
-  parHeader.textContent = 'Par'
-  parRow.appendChild(parHeader)
+const parHeader = document.createElement('th')
+parHeader.classList.add('p-2', 'font-normal')
+parHeader.textContent = 'Par'
+parRow.appendChild(parHeader)
 
-  for (let i = 0; i < 9; i++) {
-    const hole = courseData.holes[i]
+for (let i = 0; i < 9; i++) {
+  const hole = courseData.holes[i]
+  const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
+
+  if (teeBox) {
     const parColumn = document.createElement('th')
     parColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    parColumn.textContent = hole.holePar
+    parColumn.textContent = teeBox.par
     parRow.appendChild(parColumn)
+  } else {
+    const emptyParColumn = document.createElement('th')
+    emptyParColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    parRow.appendChild(emptyParColumn)
   }
+}
 
-  // Add an empty column for the "Total" row
-  const emptyTotalParColumn = document.createElement('th')
-  emptyTotalParColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  parRow.appendChild(emptyTotalParColumn)
+// Add an empty column for the "Total" row
+const emptyTotalParColumn = document.createElement('th')
+emptyTotalParColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+parRow.appendChild(emptyTotalParColumn)
 
-  frontTable.appendChild(parRow)
+frontTable.appendChild(parRow)
 
-  // Create the Handicap row with the same number of columns as Yardage
-  const handicapRow = document.createElement('tr')
-  handicapRow.classList.add('text-sm', 'bg-charcoal')
+// Create the Handicap row with the same number of columns as Yardage
+const handicapRow = document.createElement('tr')
+handicapRow.classList.add('text-sm', 'bg-charcoal')
 
-  const handicapHeader = document.createElement('th')
-  handicapHeader.classList.add('p-2', 'font-normal')
-  handicapHeader.textContent = 'Handicap'
-  handicapRow.appendChild(handicapHeader)
+const handicapHeader = document.createElement('th')
+handicapHeader.classList.add('p-2', 'font-normal')
+handicapHeader.textContent = 'Handicap'
+handicapRow.appendChild(handicapHeader)
 
-  for (let i = 0; i < 9; i++) {
-    const hole = courseData.holes[i]
+for (let i = 0; i < 9; i++) {
+  const hole = courseData.holes[i]
+  const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
+
+  if (teeBox) {
     const handicapColumn = document.createElement('th')
     handicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    handicapColumn.textContent = hole.holeHandicap
+    handicapColumn.textContent = teeBox.hcp
     handicapRow.appendChild(handicapColumn)
+  } else {
+    const emptyHandicapColumn = document.createElement('th')
+    emptyHandicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    handicapRow.appendChild(emptyHandicapColumn)
   }
+}
 
-  // Add an empty column for the "Total" row
-  const emptyTotalHandicapColumn = document.createElement('th')
-  emptyTotalHandicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  handicapRow.appendChild(emptyTotalHandicapColumn)
+// Add an empty column for the "Total" row
+const emptyTotalHandicapColumn = document.createElement('th')
+emptyTotalHandicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+handicapRow.appendChild(emptyTotalHandicapColumn)
 
-  frontTable.appendChild(handicapRow)
+frontTable.appendChild(handicapRow)
+
 
   // Create player rows based on the number of objects in the players array
   players.forEach((player) => {
