@@ -424,7 +424,7 @@ frontTable.appendChild(handicapRow)
 
 //========================================================================================
 // CREATES PLAYER ROWS BASED ON THE NUMBER OF OBJECTS IN TEH PLAEYRS ARRAY
-players.forEach((player) => {
+players.forEach((player, playerIndex) => {
   const playerRow = document.createElement('tr')
   playerRow.classList.add('text-sm')
 
@@ -434,13 +434,34 @@ players.forEach((player) => {
 
   const playerHeader = document.createElement('th')
   playerHeader.classList.add('p-2', 'font-normal')
-  playerHeader.textContent = player.name
+
+  // Create a div element for player name, make it content-editable
+  const playerNameDiv = document.createElement('div')
+  playerNameDiv.classList.add('player-name')
+  playerNameDiv.setAttribute('contenteditable', 'true')
+  playerNameDiv.textContent = player.name
+
+  // Add an input event listener to capture changes in player name
+  playerNameDiv.addEventListener('input', (event) => {
+    const newName = event.target.textContent
+    // Call the function to handle player name editing
+    handlePlayerNameEdit(player, playerIndex, newName)
+  })
+
+  // Add a keypress event listener to submit the new name on Enter key press
+  playerNameDiv.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.target.blur(); // Remove focus (content-editable) to trigger the input event
+    }
+  })
+
+  playerHeader.appendChild(playerNameDiv)
   playerRow.appendChild(playerHeader)
 
   for (let i = 0; i < 9; i++) {
     const playerColumn = document.createElement('th')
     playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    // You need to add player scores here
+    // Add player scores here
     playerColumn.textContent = player.scores[i] // Adjust the index
     playerRow.appendChild(playerColumn)
   }
@@ -448,14 +469,21 @@ players.forEach((player) => {
   // Add an empty column for the "Total" row
   const emptyTotalPlayerColumn = document.createElement('th')
   emptyTotalPlayerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  // You need to calculate and add the player's total score here
+  // Calculate and add the player's total score here
   emptyTotalPlayerColumn.textContent = player.scores.slice(0, 9).reduce((total, score) => total + score, 0)
   playerRow.appendChild(emptyTotalPlayerColumn)
 
   frontTable.appendChild(playerRow)
 })
 
-  scorecardContainer.appendChild(frontTable)
+scorecardContainer.appendChild(frontTable)
 }
 // Call the function to render the scorecard tables
-renderScorecardTable()
+//renderScorecardTable()
+
+// Function to handle player name editing
+function handlePlayerNameEdit(player, playerIndex, newName) {
+  // Update the player name in your data structure (e.g., players array)
+  players[playerIndex].name = newName
+}
+
