@@ -458,13 +458,31 @@ players.forEach((player, playerIndex) => {
   playerHeader.appendChild(playerNameDiv)
   playerRow.appendChild(playerHeader)
 
+  // This creates the score, makes it editable, and pushes the data to the scores array of the player object
   for (let i = 0; i < 9; i++) {
     const playerColumn = document.createElement('th')
     playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    // Add player scores here
-    playerColumn.textContent = player.scores[i] // Adjust the index
-    playerRow.appendChild(playerColumn)
+    playerColumn.textContent = player.scores[i] // Display the score
+    playerColumn.setAttribute('contentEditable', 'true') // Make it editable
+    playerColumn.addEventListener('input', (event) => {
+      const inputText = event.target.textContent;
+      if (!/^\d+$/.test(inputText)) {
+        // If the input is not a number, clear it
+        event.target.textContent = '';
+      } else {
+        const newScore = parseInt(inputText);
+        player.scores[i] = newScore; // Update the player's score
+      }
+    });
+    playerColumn.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        playerColumn.blur(); // Remove focus to save the change
+      }
+    });
+    playerRow.appendChild(playerColumn);
   }
+  
 
   // Add an empty column for the "Total" row
   const emptyTotalPlayerColumn = document.createElement('th')
