@@ -280,7 +280,7 @@ function renderScorecardTable() {
     // Add the "Total" column
     const totalColumn = document.createElement('th')
     totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    totalColumn.textContent = 'Total' // Display "Total"
+    totalColumn.textContent = 'Out' // Display "Total"
     holeRow.appendChild(totalColumn)
 
     frontTable.appendChild(holeRow)
