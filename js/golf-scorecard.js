@@ -426,96 +426,89 @@ function renderScorecardTable() {
   players.forEach((player, playerIndex) => {
     const playerRow = document.createElement('tr')
     playerRow.classList.add('text-sm')
-
-    if (players.indexOf(player) % 2 != 0) {
+  
+    if (playerIndex % 2 !== 0) {
       playerRow.classList.add('bg-charcoal')
     }
-
+  
     const playerHeader = document.createElement('th')
     playerHeader.classList.add('p-2', 'font-normal')
-
+  
     // Create a div element for player name, make it content-editable
     const playerNameDiv = document.createElement('div')
     playerNameDiv.classList.add('player-name')
     playerNameDiv.setAttribute('contenteditable', 'true')
     playerNameDiv.textContent = player.name
-
+  
     // Add an input event listener to capture changes in player name
     playerNameDiv.addEventListener('input', (event) => {
       const newName = event.target.textContent
       // Call the function to handle player name editing
       handlePlayerNameEdit(player, playerIndex, newName)
     })
-
-    // Add a keypress event listener to submit the new name on Enter key press
+  
+    // Prevent the Enter key from creating a new line
     playerNameDiv.addEventListener('keypress', (event) => {
       if (event.key === 'Enter') {
-        event.target.blur(); // Remove focus (content-editable) to trigger the input event
+        event.preventDefault()
+        playerNameDiv.blur() // Remove focus to save the change
       }
     })
-
+  
     playerHeader.appendChild(playerNameDiv)
     playerRow.appendChild(playerHeader)
-
-    function updateOutScore(player) {
-      const outScore = player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
-      player.scores[9] = outScore
+  
+    function calculateOutScore(player) {
+      return player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
     }
   
-
+    let outColumn; // Define the outColumn here
+  
     for (let i = 0; i < 18; i++) {
       const playerColumn = document.createElement('th')
       playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-      const initialScore = player.scores[i] || '' // Get the initial score or an empty string
-      playerColumn.textContent = initialScore // Display the initial score
-
+      const initialScore = player.scores[i] || ''
+      playerColumn.textContent = initialScore
+  
       if (i !== 9) {
-        playerColumn.setAttribute('contenteditable', 'true') // Make the "In" cells editable
+        playerColumn.setAttribute('contenteditable', 'true')
+        playerColumn.addEventListener('input', (event) => {
+          const inputText = event.target.textContent
+          if (!/^\d*$/.test(inputText)) {
+            event.target.textContent = ''
+          } else {
+            const newScore = parseInt(inputText)
+            player.scores[i] = newScore
+            outColumn.textContent = calculateOutScore(player) // Update the Out column
+          }
+        })
+  
+        // Prevent the Enter key from creating a new line
+        playerColumn.addEventListener('keypress', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            playerColumn.blur() // Remove focus to save the change
+          }
+        })
       } else {
         playerColumn.setAttribute('contenteditable', 'false')
-        playerColumn.classList.add('out-column') // Make the "Out" cells not editable
-        
       }
-   
-
-    playerColumn.addEventListener('input', (event) => {
-      const inputText = event.target.textContent
-      if (!/^\d*$/.test(inputText)) {
-        // If the input is not a number, clear it
-        event.target.textContent = ''
-      } else {
-        const newScore = parseInt(inputText)
-        player.scores[i] = newScore // Update the player's score
-        updateOutScore(player) // Recalculate and update the "Out" score
-        console.log(`Player: ${player.name}, Hole ${i + 1}, New Score: ${newScore}`) // Log the input
-        console.log(`Out score for ${player.name}: ${player.scores[9]}`) // Log the updated "Out" score
-        let totalOutScore = document.querySelector('.out-column')
-        totalOutScore.textContent = player.scores[9]  
-        
-      }
-
-    })
-
-    playerColumn.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault()
-        playerColumn.blur() // Remove focus to save the change
-      }
-    })
-
-    playerRow.appendChild(playerColumn)
-  }
-  // Add a "Total" column for the player
-  const totalPlayerScore = player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
-  const totalPlayerColumn = document.createElement('th')
-  totalPlayerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  totalPlayerColumn.textContent = totalPlayerScore
-  playerRow.appendChild(totalPlayerColumn)
-
-
-  frontTable.appendChild(playerRow)
-})
   
+      playerRow.appendChild(playerColumn)
+  
+      if (i === 8) {
+        // Create the Out column for the player
+        outColumn = document.createElement('th')
+        outColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents', 'out-column')
+        outColumn.textContent = calculateOutScore(player)
+        playerRow.appendChild(outColumn)
+      }
+    }
+  
+    frontTable.appendChild(playerRow)
+  })
+  
+    
       // Create a new row for the "Total" column for players
     const totalRow = document.createElement('tr')
     totalRow.classList.add('text-sm')
