@@ -176,8 +176,8 @@ function handleTeeBoxSelect(teeBox) {
   selectedTeeBox = teeBox.teeType // Update selectedTeeBox
   // console.log('Updated selectedTeeBox:', selectedTeeBox) // Log the updated value
   if (teeBox.teeType) {
-    // console.log('About to call renderScorecardTable with selectedTeeBox:', selectedTeeBox)
-    renderScorecardTable(); // Render the scorecard with the updated selectedTeeBox
+    // console.log('About to call renderFrontNineTable with selectedTeeBox:', selectedTeeBox)
+    renderFrontNineTable(); // Render the scorecard with the updated selectedTeeBox
   } else {
     console.log('teeBox.teeType is not available.')
   }
@@ -247,15 +247,16 @@ function generatePlayers() {
   console.log(`Generated ${numberOfPlayers} players:`)
   console.log(players)
 
-  renderScorecardTable()
+  renderFrontNineTable()
+  renderBackNineTable()
 }
 
 
 //===========================================================
 //FUNCTION THAT BUILDS THE SCORECARD
-function renderScorecardTable() {
+function renderFrontNineTable() {
   // Select the scorecard container
-  const scorecardContainer = document.getElementById('scorecard-container')
+  const scorecardContainer = document.getElementById('front-nine-container')
   scorecardContainer.innerHTML = '' // Clear any existing content
 
   const frontTable = document.createElement('table')
@@ -263,7 +264,6 @@ function renderScorecardTable() {
   frontTable.id = 'frontHole'
 
   if (courseData && courseData.holes && courseData.holes.length >= 18) {
-    // Create the Hole row for 18 holes, including "Out" before the 10th hole
     const holeRow = document.createElement('tr')
     holeRow.classList.add('text-sm')
 
@@ -272,22 +272,17 @@ function renderScorecardTable() {
     holeHeader.textContent = 'Hole'
     holeRow.appendChild(holeHeader)
 
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 9; i++) { // Only render the first 9 holes
       const holeColumn = document.createElement('th')
       holeColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-      holeColumn.textContent = i === 9 ? 'Out' : i + 1 // Display "Out" for the 10th hole
-      if (i === 9) {
-        holeColumn.classList.add('bg-lime', 'text-black', 'font-bold'); // Add the 'bg-lime' class to the "Out" cell
-      }
+      holeColumn.textContent = i + 1
       holeRow.appendChild(holeColumn)
     }
 
-    // Add the "Total" column for 18 holes
     const totalColumn = document.createElement('th')
     totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents', 'bg-lime', 'text-black', 'font-bold')
-    totalColumn.textContent = 'Total' // Display "Total" for In and Total
+    totalColumn.textContent = 'Out'
     holeRow.appendChild(totalColumn)
-
 
     frontTable.appendChild(holeRow)
   } else {
@@ -295,23 +290,16 @@ function renderScorecardTable() {
     return
   }
 
-  // Create the Yardage row for 18 holes
+  // Create the Yardage row for the first 9 holes
   const totalYardageOut = Array(9).fill(0)
-  const totalYardageIn = Array(9).fill(0)
-  const totalYardageTotal = Array(9).fill(0)
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 9; i++) {
     const hole = courseData.holes[i]
     const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
 
     if (teeBox) {
       const yardage = parseInt(teeBox.yards)
-      if (i < 9) {
-        totalYardageOut[i] = yardage
-      } else {
-        totalYardageIn[i - 9] = yardage
-      }
-      totalYardageTotal[i] = yardage
+      totalYardageOut[i] = yardage
     }
   }
 
@@ -323,37 +311,30 @@ function renderScorecardTable() {
   yardageHeader.textContent = 'Yardage'
   yardageRow.appendChild(yardageHeader)
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 9; i++) {
     const yardageColumn = document.createElement('th')
     yardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    yardageColumn.textContent = i < 9 ? totalYardageOut[i] : totalYardageIn[i - 9]
+    yardageColumn.textContent = totalYardageOut[i]
     yardageRow.appendChild(yardageColumn)
   }
 
   const totalYardageColumn = document.createElement('th')
   totalYardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  totalYardageColumn.textContent = totalYardageTotal.reduce((total, yardage) => total + yardage, 0)
+  totalYardageColumn.textContent = totalYardageOut.reduce((total, yardage) => total + yardage, 0)
   yardageRow.appendChild(totalYardageColumn)
 
   frontTable.appendChild(yardageRow)
 
-  // Create the Par row for 18 holes
+  // Create the Par row for the first 9 holes
   const totalParOut = Array(9).fill(0)
-  const totalParIn = Array(9).fill(0)
-  const totalParTotal = Array(9).fill(0)
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 9; i++) {
     const hole = courseData.holes[i]
     const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
 
     if (teeBox) {
       const par = parseInt(teeBox.par)
-      if (i < 9) {
-        totalParOut[i] = par
-      } else {
-        totalParIn[i - 9] = par
-      }
-      totalParTotal[i] = par
+      totalParOut[i] = par
     }
   }
 
@@ -365,37 +346,30 @@ function renderScorecardTable() {
   parHeader.textContent = 'Par'
   parRow.appendChild(parHeader)
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 9; i++) {
     const parColumn = document.createElement('th')
     parColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    parColumn.textContent = i < 9 ? totalParOut[i] : totalParIn[i - 9]
+    parColumn.textContent = totalParOut[i]
     parRow.appendChild(parColumn)
   }
 
   const totalParColumn = document.createElement('th')
   totalParColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  totalParColumn.textContent = totalParTotal.reduce((total, par) => total + par, 0)
+  totalParColumn.textContent = totalParOut.reduce((total, par) => total + par, 0)
   parRow.appendChild(totalParColumn)
 
   frontTable.appendChild(parRow)
 
-  // Create the Handicap row for 18 holes
+  // Create the Handicap row for the first 9 holes
   const totalHandicapOut = Array(9).fill(0)
-  const totalHandicapIn = Array(9).fill(0)
-  const totalHandicapTotal = Array(9).fill(0)
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 9; i++) {
     const hole = courseData.holes[i]
     const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
 
     if (teeBox) {
       const handicap = parseInt(teeBox.hcp)
-      if (i < 9) {
-        totalHandicapOut[i] = handicap
-      } else {
-        totalHandicapIn[i - 9] = handicap
-      }
-      totalHandicapTotal[i] = handicap
+      totalHandicapOut[i] = handicap
     }
   }
 
@@ -407,46 +381,45 @@ function renderScorecardTable() {
   handicapHeader.textContent = 'Handicap'
   handicapRow.appendChild(handicapHeader)
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 9; i++) {
     const handicapColumn = document.createElement('th')
     handicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    handicapColumn.textContent = i < 9 ? totalHandicapOut[i] : totalHandicapIn[i - 9]
+    handicapColumn.textContent = totalHandicapOut[i]
     handicapRow.appendChild(handicapColumn)
   }
 
   const totalHandicapColumn = document.createElement('th')
   totalHandicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-  totalHandicapColumn.textContent = totalHandicapTotal.reduce((total, handicap) => total + handicap, 0)
+  totalHandicapColumn.textContent = totalHandicapOut.reduce((total, handicap) => total + handicap, 0)
   handicapRow.appendChild(totalHandicapColumn)
 
   frontTable.appendChild(handicapRow)
 
-  
   // Create player rows based on the number of objects in the players array
   players.forEach((player, playerIndex) => {
     const playerRow = document.createElement('tr')
     playerRow.classList.add('text-sm')
-  
+
     if (playerIndex % 2 !== 0) {
       playerRow.classList.add('bg-charcoal')
     }
-  
+
     const playerHeader = document.createElement('th')
     playerHeader.classList.add('p-2', 'font-normal')
-  
+
     // Create a div element for player name, make it content-editable
     const playerNameDiv = document.createElement('div')
     playerNameDiv.classList.add('player-name')
     playerNameDiv.setAttribute('contenteditable', 'true')
     playerNameDiv.textContent = player.name
-  
+
     // Add an input event listener to capture changes in player name
     playerNameDiv.addEventListener('input', (event) => {
       const newName = event.target.textContent
       // Call the function to handle player name editing
       handlePlayerNameEdit(player, playerIndex, newName)
     })
-  
+
     // Prevent the Enter key from creating a new line
     playerNameDiv.addEventListener('keypress', (event) => {
       if (event.key === 'Enter') {
@@ -454,22 +427,22 @@ function renderScorecardTable() {
         playerNameDiv.blur() // Remove focus to save the change
       }
     })
-  
+
     playerHeader.appendChild(playerNameDiv)
     playerRow.appendChild(playerHeader)
-  
+
     function calculateOutScore(player) {
       return player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
     }
-  
+
     let outColumn; // Define the outColumn here
-  
-    for (let i = 0; i < 18; i++) {
+
+    for (let i = 0; i < 9; i++) { // Only render the first 9 holes
       const playerColumn = document.createElement('th')
       playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
       const initialScore = player.scores[i] || ''
       playerColumn.textContent = initialScore
-  
+
       if (i !== 9) {
         playerColumn.setAttribute('contenteditable', 'true')
         playerColumn.addEventListener('input', (event) => {
@@ -482,7 +455,7 @@ function renderScorecardTable() {
             outColumn.textContent = calculateOutScore(player) // Update the Out column
           }
         })
-  
+
         // Prevent the Enter key from creating a new line
         playerColumn.addEventListener('keypress', (event) => {
           if (event.key === 'Enter') {
@@ -493,9 +466,9 @@ function renderScorecardTable() {
       } else {
         playerColumn.setAttribute('contenteditable', 'false')
       }
-  
+
       playerRow.appendChild(playerColumn)
-  
+
       if (i === 8) {
         // Create the Out column for the player
         outColumn = document.createElement('th')
@@ -504,42 +477,228 @@ function renderScorecardTable() {
         playerRow.appendChild(outColumn)
       }
     }
-  
+
     frontTable.appendChild(playerRow)
   })
-  
-    
-      // Create a new row for the "Total" column for players
-    const totalRow = document.createElement('tr')
-    totalRow.classList.add('text-sm')
 
-    const totalHeader = document.createElement('th')
-    totalHeader.classList.add('p-2', 'font-normal')
-    totalHeader.textContent = 'Total'
+  scorecardContainer.appendChild(frontTable)
+}
 
-    totalRow.appendChild(totalHeader)
 
-    for (let i = 0; i < 18; i++) {
-      const totalColumn = document.createElement('th')
-      totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+// Call the function to render the scorecard tables
+// renderFrontNineTable()
 
-      // Calculate the total score for each player and add it to the total column
-      const totalPlayerScore = players.reduce((total, player) => total + (player.scores[i] || 0), 0)
-      totalColumn.textContent = totalPlayerScore
+function renderBackNineTable() {
+  // Select the scorecard container for the back nine
+  const scorecardContainer = document.getElementById('back-nine-container')
+  scorecardContainer.innerHTML = '' // Clear any existing content
 
-      totalRow.appendChild(totalColumn)
+  const backTable = document.createElement('table')
+  backTable.classList.add('table', 'w-full')
+  backTable.id = 'backHole'
+
+  if (courseData && courseData.holes && courseData.holes.length >= 18) {
+    const holeRow = document.createElement('tr')
+    holeRow.classList.add('text-sm')
+
+    const holeHeader = document.createElement('th')
+    holeHeader.classList.add('p-2', 'font-normal')
+    holeHeader.textContent = 'Hole'
+    holeRow.appendChild(holeHeader)
+
+    for (let i = 9; i < 18; i++) { // Render holes 10 to 18
+      const holeColumn = document.createElement('th')
+      holeColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+      holeColumn.textContent = i + 1
+      holeRow.appendChild(holeColumn)
     }
 
+    const totalColumn = document.createElement('th')
+    totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents', 'bg-lime', 'text-black', 'font-bold')
+    totalColumn.textContent = 'In Total'
+    holeRow.appendChild(totalColumn)
 
-    // frontTable.appendChild(totalRow)
-  
-  scorecardContainer.appendChild(frontTable)
+    backTable.appendChild(holeRow)
+  } else {
+    console.log('Course data does not have enough holes for 18.')
+    return
+  }
 
-  // updateOutScores()
+  // Create the Yardage row for holes 10 to 18
+  const totalYardageIn = Array(9).fill(0)
+
+  for (let i = 9; i < 18; i++) { // Calculate yardage for holes 10 to 18
+    const hole = courseData.holes[i]
+    const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
+
+    if (teeBox) {
+      const yardage = parseInt(teeBox.yards)
+      totalYardageIn[i - 9] = yardage
+    }
+  }
+
+  const yardageRow = document.createElement('tr')
+  yardageRow.classList.add('text-sm', 'bg-charcoal')
+
+  const yardageHeader = document.createElement('th')
+  yardageHeader.classList.add('p-2', 'font-normal', 'bg-charcoal')
+  yardageHeader.textContent = 'Yardage'
+  yardageRow.appendChild(yardageHeader)
+
+  for (let i = 9; i < 18; i++) {
+    const yardageColumn = document.createElement('th')
+    yardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    yardageColumn.textContent = totalYardageIn[i - 9]
+    yardageRow.appendChild(yardageColumn)
+  }
+
+  const totalYardageColumn = document.createElement('th')
+  totalYardageColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+  totalYardageColumn.textContent = totalYardageIn.reduce((total, yardage) => total + yardage, 0)
+  yardageRow.appendChild(totalYardageColumn)
+
+  backTable.appendChild(yardageRow)
+
+  // Create the Par row for holes 10 to 18
+  const totalParIn = Array(9).fill(0)
+
+  for (let i = 9; i < 18; i++) { // Calculate par for holes 10 to 18
+    const hole = courseData.holes[i]
+    const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
+
+    if (teeBox) {
+      const par = parseInt(teeBox.par)
+      totalParIn[i - 9] = par
+    }
+  }
+
+  const parRow = document.createElement('tr')
+  parRow.classList.add('text-sm')
+
+  const parHeader = document.createElement('th')
+  parHeader.classList.add('p-2', 'font-normal')
+  parHeader.textContent = 'Par'
+  parRow.appendChild(parHeader)
+
+  for (let i = 9; i < 18; i++) {
+    const parColumn = document.createElement('th')
+    parColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    parColumn.textContent = totalParIn[i - 9]
+    parRow.appendChild(parColumn)
+  }
+
+  const totalParColumn = document.createElement('th')
+  totalParColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+  totalParColumn.textContent = totalParIn.reduce((total, par) => total + par, 0)
+  parRow.appendChild(totalParColumn)
+
+  backTable.appendChild(parRow)
+
+  // Create player rows for holes 10 to 18
+  players.forEach((player, playerIndex) => {
+    const playerRow = document.createElement('tr')
+    playerRow.classList.add('text-sm')
+
+    if (playerIndex % 2 !== 0) {
+      playerRow.classList.add('bg-charcoal')
+    }
+
+    const playerHeader = document.createElement('th')
+    playerHeader.classList.add('p-2', 'font-normal')
+
+    // Create a div element for player name, make it content-editable
+    const playerNameDiv = document.createElement('div')
+    playerNameDiv.classList.add('player-name')
+    playerNameDiv.setAttribute('contenteditable', 'true')
+    playerNameDiv.textContent = player.name
+
+    // Add an input event listener to capture changes in player name
+    playerNameDiv.addEventListener('input', (event) => {
+      const newName = event.target.textContent
+      // Call the function to handle player name editing
+      handlePlayerNameEdit(player, playerIndex, newName)
+    })
+
+    // Prevent the Enter key from creating a new line
+    playerNameDiv.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        playerNameDiv.blur() // Remove focus to save the change
+      }
+    })
+
+    playerHeader.appendChild(playerNameDiv)
+    playerRow.appendChild(playerHeader)
+
+    function calculateInScore(player) {
+      return player.scores.slice(9, 18).reduce((total, score) => total + (score || 0), 0)
+    }
+
+    let inColumn; // Define the inColumn here
+
+    for (let i = 9; i < 18; i++) {
+      const playerColumn = document.createElement('th')
+      playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+      const initialScore = player.scores[i] || ''
+      playerColumn.textContent = initialScore
+
+      playerColumn.setAttribute('contenteditable', 'true')
+      playerColumn.addEventListener('input', (event) => {
+        const inputText = event.target.textContent
+        if (!/^\d*$/.test(inputText)) {
+          event.target.textContent = ''
+        } else {
+          const newScore = parseInt(inputText)
+          player.scores[i] = newScore
+          inColumn.textContent = calculateInScore(player) // Update the In column
+        }
+      })
+
+      // Prevent the Enter key from creating a new line
+      playerColumn.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault()
+          playerColumn.blur() // Remove focus to save the change
+        }
+      })
+
+      playerRow.appendChild(playerColumn)
+
+      if (i === 17) {
+        // Create the In Total column for the player
+        inColumn = document.createElement('th')
+        inColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents', 'in-total-column')
+        inColumn.textContent = calculateInScore(player)
+        playerRow.appendChild(inColumn)
+      }
+    }
+
+    backTable.appendChild(playerRow)
+  })
+
+  // Create a new row for the "Total" column for players on the back nine
+  const totalRow = document.createElement('tr')
+  totalRow.classList.add('text-sm')
+
+  const totalHeader = document.createElement('th')
+  totalHeader.classList.add('p-2', 'font-normal')
+  totalHeader.textContent = 'In Total'
+
+  totalRow.appendChild(totalHeader)
+
+  for (let i = 9; i < 18; i++) {
+    const totalColumn = document.createElement('th')
+    totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+
+    // Calculate the total score for each player on the back nine and add it to the total column
+    const totalPlayerScore = players.reduce((total, player) => total + (player.scores[i] || 0), 0)
+    totalColumn.textContent = totalPlayerScore
+
+    totalRow.appendChild(totalColumn)
+  }
+
+  scorecardContainer.appendChild(backTable)
 }
-// Call the function to render the scorecard tables
-// renderScorecardTable()
-
 
 
 // Function to handle player name editing
@@ -547,4 +706,3 @@ function handlePlayerNameEdit(player, playerIndex, newName) {
   // Update the player name in your data structure (e.g., players array)
   players[playerIndex].name = newName
 }
-
