@@ -457,25 +457,25 @@ function renderScorecardTable() {
     playerHeader.appendChild(playerNameDiv)
     playerRow.appendChild(playerHeader)
 
-  function updateOutScore(player) {
-    const outScore = player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
-    player.scores[9] = outScore
-  }
+    function updateOutScore(player) {
+      const outScore = player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
+      player.scores[9] = outScore
+    }
   
 
-  for (let i = 0; i < 18; i++) {
-    const playerColumn = document.createElement('th')
-    playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
-    const initialScore = player.scores[i] || '' // Get the initial score or an empty string
-    playerColumn.textContent = initialScore // Display the initial score
+    for (let i = 0; i < 18; i++) {
+      const playerColumn = document.createElement('th')
+      playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+      const initialScore = player.scores[i] || '' // Get the initial score or an empty string
+      playerColumn.textContent = initialScore // Display the initial score
 
-    if (i !== 9) {
-      playerColumn.setAttribute('contenteditable', 'true') // Make the "In" cells editable
-    } else {
-      playerColumn.setAttribute('contenteditable', 'false')
-      playerColumn.classList.add('out-column') // Make the "Out" cells not editable
-      
-    }
+      if (i !== 9) {
+        playerColumn.setAttribute('contenteditable', 'true') // Make the "In" cells editable
+      } else {
+        playerColumn.setAttribute('contenteditable', 'false')
+        playerColumn.classList.add('out-column') // Make the "Out" cells not editable
+        
+      }
    
 
     playerColumn.addEventListener('input', (event) => {
@@ -503,13 +503,42 @@ function renderScorecardTable() {
       }
     })
 
-
     playerRow.appendChild(playerColumn)
   }
+  // Add a "Total" column for the player
+  const totalPlayerScore = player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
+  const totalPlayerColumn = document.createElement('th')
+  totalPlayerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+  totalPlayerColumn.textContent = totalPlayerScore
+  playerRow.appendChild(totalPlayerColumn)
+
 
   frontTable.appendChild(playerRow)
 })
+  
+      // Create a new row for the "Total" column for players
+    const totalRow = document.createElement('tr')
+    totalRow.classList.add('text-sm')
 
+    const totalHeader = document.createElement('th')
+    totalHeader.classList.add('p-2', 'font-normal')
+    totalHeader.textContent = 'Total'
+
+    totalRow.appendChild(totalHeader)
+
+    for (let i = 0; i < 18; i++) {
+      const totalColumn = document.createElement('th')
+      totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+
+      // Calculate the total score for each player and add it to the total column
+      const totalPlayerScore = players.reduce((total, player) => total + (player.scores[i] || 0), 0)
+      totalColumn.textContent = totalPlayerScore
+
+      totalRow.appendChild(totalColumn)
+    }
+
+
+    // frontTable.appendChild(totalRow)
   
   scorecardContainer.appendChild(frontTable)
 
@@ -519,14 +548,6 @@ function renderScorecardTable() {
 // renderScorecardTable()
 
 
-//====== Testing the DOM============
-// function updateOutScores() {
-//   const outColumns = document.querySelectorAll('.out-column') // Assuming you have a specific class for "Out" columns
-//   outColumns.forEach((outColumn) => {
-//     outColumn.textContent = '0' // Set the content to '0'
-
-//   })
-// }
 
 // Function to handle player name editing
 function handlePlayerNameEdit(player, playerIndex, newName) {
