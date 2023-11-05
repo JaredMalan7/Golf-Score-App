@@ -245,7 +245,7 @@ function generatePlayers() {
   }
 
   console.log(`Generated ${numberOfPlayers} players:`)
-  console.log(players)
+  // console.log(players)
 
   renderFrontNineTable()
   renderBackNineTable()
@@ -482,13 +482,11 @@ function renderFrontNineTable() {
   })
 
   scorecardContainer.appendChild(frontTable)
+  // console.log(players)
 }
-
-
-// Call the function to render the scorecard tables
-// renderFrontNineTable()
-
+// Call the function to render the scorecard table
 function renderBackNineTable() {
+  console.log(players)
   // Select the scorecard container for the back nine
   const scorecardContainer = document.getElementById('back-nine-container')
   scorecardContainer.innerHTML = '' // Clear any existing content
@@ -631,7 +629,7 @@ function renderBackNineTable() {
     playerRow.appendChild(playerHeader)
 
     function calculateInScore(player) {
-      return player.scores.slice(9, 18).reduce((total, score) => total + (score || 0), 0)
+      return player.scores.slice(0, 18).reduce((total, score) => total + (score || 0), 0)
     }
 
     let inColumn; // Define the inColumn here
