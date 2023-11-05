@@ -212,7 +212,7 @@ function renderPlayerOptions() {
 
   // COURSE HEADING
   const playerSelectHeading = document.createElement('h1')
-  playerSelectHeading.textContent = 'Choose Your Course'
+  playerSelectHeading.textContent = 'Choose Number of Players'
   playerSelectHeading.className = 'w-full mt-7 mb-8 font-bold'
   playerSelectionContainer.appendChild(playerSelectHeading)    
 
