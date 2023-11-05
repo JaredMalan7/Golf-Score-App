@@ -513,7 +513,7 @@ function renderBackNineTable() {
 
     const totalColumn = document.createElement('th')
     totalColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents', 'bg-lime', 'text-black', 'font-bold')
-    totalColumn.textContent = 'In Total'
+    totalColumn.textContent = 'Total'
     holeRow.appendChild(totalColumn)
 
     backTable.appendChild(holeRow)
@@ -591,6 +591,44 @@ function renderBackNineTable() {
   parRow.appendChild(totalParColumn)
 
   backTable.appendChild(parRow)
+
+
+  // Create the Handicap row for holes 10 to 18
+  const totalHandicapIn = Array(9).fill(0)
+
+  for (let i = 9; i < 18; i++) { // Calculate handicap for holes 10 to 18
+    const hole = courseData.holes[i]
+    const teeBox = hole.teeBoxes.find((box) => box.teeType === selectedTeeBox)
+
+    if (teeBox) {
+      const handicap = parseInt(teeBox.hcp)
+      totalHandicapIn[i - 9] = handicap
+    }
+  }
+
+  const handicapRow = document.createElement('tr')
+  handicapRow.classList.add('text-sm', 'bg-charcoal')
+
+  const handicapHeader = document.createElement('th')
+  handicapHeader.classList.add('p-2', 'font-normal', 'bg-charcoal')
+  handicapHeader.textContent = 'Handicap'
+  handicapRow.appendChild(handicapHeader)
+
+  for (let i = 9; i < 18; i++) {
+    const handicapColumn = document.createElement('th')
+    handicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+    handicapColumn.textContent = totalHandicapIn[i - 9]
+    handicapRow.appendChild(handicapColumn)
+  }
+
+  const totalHandicapColumn = document.createElement('th')
+  totalHandicapColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
+  totalHandicapColumn.textContent = totalHandicapIn.reduce((total, par) => total + par, 0)
+  handicapRow.appendChild(totalHandicapColumn)
+
+  backTable.appendChild(handicapRow)
+
+ 
 
   // Create player rows for holes 10 to 18
   players.forEach((player, playerIndex) => {
@@ -680,7 +718,7 @@ function renderBackNineTable() {
 
   const totalHeader = document.createElement('th')
   totalHeader.classList.add('p-2', 'font-normal')
-  totalHeader.textContent = 'In Total'
+  totalHeader.textContent = 'Total'
 
   totalRow.appendChild(totalHeader)
 
