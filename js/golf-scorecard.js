@@ -163,7 +163,9 @@ async function renderTeeBoxes(courseId) {
               const teeBoxParentContainer = document.getElementById('teeBoxParentContainer')
               teeBoxParentContainer.style.display = 'none'
 
-
+              const playersParentContainer = document.getElementById('playersParentContainer')
+              playersParentContainer.style.display = 'flex'
+              playersParentContainer.style.flexDirection = 'column'
 
               handleTeeBoxSelect(teeBox)
               renderPlayerOptions()
@@ -272,6 +274,17 @@ function renderPlayerOptions() {
 
   const goBackButton = document.createElement('i')
   goBackButton.className = 'fa-solid fa-chevron-left color-lime pl-4 pr-4 pt-3 pb-3 bg-lime rounded-full'
+
+  goBackButton.addEventListener('click', () => {
+    const playersParentContainer = document.getElementById('playersParentContainer')
+    playersParentContainer.style.display = 'none'
+
+    const teeBoxParentContainer = document.getElementById('teeBoxParentContainer')
+    teeBoxParentContainer.style.display = 'flex'
+    teeBoxParentContainer.style.flexDirection = 'column'
+    
+  }) 
+
 
   ButtonsContainer.appendChild(goBackButton)
 
