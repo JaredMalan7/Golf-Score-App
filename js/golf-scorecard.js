@@ -77,7 +77,10 @@ async function populateCourseSelect() {
 
         //===EVENT LISTENER TO LOG THE SELECTED COURSE=====
         courseDiv.addEventListener('click', () => {
-          console.log("Selected golf course:", _course.id)
+          // console.log("Selected golf course:", _course.id)
+          const coursesParentContainer = document.getElementById('coursesParentContainer')
+          coursesParentContainer.style.display = 'none'
+
           fetchCourseData(_course.id)
 
           renderTeeBoxes(_course.id)
@@ -144,7 +147,6 @@ async function renderTeeBoxes(courseId) {
             teeBoxDiv.textContent = teeBox.teeType
             teeBoxContainer.appendChild(teeBoxDiv)
 
-
             // Capitalize the first letter of teeType
             const capitalizedTeeType = teeBox.teeType.charAt(0).toUpperCase() + teeBox.teeType.slice(1)
             teeBoxDiv.textContent = capitalizedTeeType
@@ -152,7 +154,10 @@ async function renderTeeBoxes(courseId) {
 
             // Add an event listener to each teeBox
             teeBoxDiv.addEventListener('click', () => {
-              console.log('Selected Tee Box:', capitalizedTeeType)
+              // console.log('Selected Tee Box:', capitalizedTeeType)
+
+              const teeBoxParentContainer = document.getElementById('teeBoxParentContainer')
+              teeBoxParentContainer.style.display = 'none'
               handleTeeBoxSelect(teeBox)
               renderPlayerOptions()
             })
@@ -164,6 +169,16 @@ async function renderTeeBoxes(courseId) {
     } else {
       console.log('No holes found for the selected course.')
     }
+
+    //This is the go back button    
+    const ButtonsContainer = document.getElementById('ButtonsContainer')
+      ButtonsContainer.innerHTML = ''
+    
+    const goBackButton = document.createElement('i')
+    goBackButton.className = 'fa-solid fa-chevron-left color-lime pl-4 pr-4 pt-3 pb-3 bg-lime rounded-full'
+
+    ButtonsContainer.appendChild(goBackButton)
+
   } catch (error) {
     console.error('Error rendering teeBoxes:', error)
   }
@@ -223,14 +238,27 @@ function renderPlayerOptions() {
     playerOption.textContent = i
 
     playerOption.addEventListener('click', () => {
+
+      const playersParentContainer = document.getElementById('playersParentContainer')
+      playersParentContainer.style.display = 'none'
+      
       numberOfPlayers = parseInt(playerOption.textContent) // this updates the global variable
-      console.log('Selected Players:', numberOfPlayers)
+      // console.log('Selected Players:', numberOfPlayers)
       generatePlayers()
     })
 
     playerSelectionContainer.appendChild(playerOption)
   }
-  
+
+  //This is the go back button    
+  const ButtonsContainer = document.getElementById('ButtonsContainer2')
+  ButtonsContainer.innerHTML = ''
+
+  const goBackButton = document.createElement('i')
+  goBackButton.className = 'fa-solid fa-chevron-left color-lime pl-4 pr-4 pt-3 pb-3 bg-lime rounded-full'
+
+  ButtonsContainer.appendChild(goBackButton)
+
 }
 // renderPlayerOptions()
 
@@ -248,6 +276,7 @@ function generatePlayers() {
   // console.log(players)
 
   renderFrontNineTable()
+  forwardButton()
   renderBackNineTable()
 }
 
@@ -480,10 +509,27 @@ function renderFrontNineTable() {
 
     frontTable.appendChild(playerRow)
   })
+  const ButtonsContainer = document.getElementById('ButtonsContainer3')
+  ButtonsContainer.innerHTML = ''
 
+  const goBackButton = document.createElement('i')
+  goBackButton.className = 'fa-solid fa-chevron-left color-lime pl-4 pr-4 pt-3 pb-3 bg-lime rounded-full'
+
+  ButtonsContainer.appendChild(goBackButton)
   scorecardContainer.appendChild(frontTable)
   // console.log(players)
 }
+
+function forwardButton(){
+  const ButtonsContainer = document.getElementById('front-nine-container')
+  // ButtonsContainer.innerHTML = ''
+
+  const goInButton = document.createElement('i')
+  goInButton.className = 'fa-solid fa-chevron-right text-lime pl-4 pr-4 pt-3 pb-3 rounded-xl h-fit mt-auto mb-auto'
+
+  ButtonsContainer.appendChild(goInButton)
+}
+
 // Call the function to render the scorecard table
 function renderBackNineTable() {
   console.log(players)
