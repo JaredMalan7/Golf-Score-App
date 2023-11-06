@@ -315,13 +315,7 @@ function generatePlayers() {
 }
 
 
-const frontNineHeading = document.createElement('h1')
-frontNineHeading.textContent = 'Scorecard Table'
-frontNineHeading.className = 'text-center font-bold'
 
-const scoreCardParentContainer = document.getElementById('scoreCardParentContainer')
-
-scoreCardParentContainer.insertBefore(frontNineHeading, scoreCardParentContainer.firstChild)
 
 //===========================================================
 //FUNCTION THAT BUILDS THE SCORECARD
@@ -329,6 +323,18 @@ function renderFrontNineTable() {
   // Select the scorecard container
   const scorecardContainer = document.getElementById('front-nine-container')
   scorecardContainer.innerHTML = '' // Clear any existing content
+
+
+  const scoreCardParentContainer = document.getElementById('scoreCardParentContainer')
+ 
+
+  const frontNineHeading = document.createElement('h1')
+  frontNineHeading.textContent = 'Scorecard Table'
+  frontNineHeading.className = 'text-center font-bold'
+
+
+  scoreCardParentContainer.insertBefore(frontNineHeading, scoreCardParentContainer.firstChild)
+
 
 
   const frontTable = document.createElement('table')
