@@ -259,6 +259,10 @@ function renderPlayerOptions() {
 
       const playersParentContainer = document.getElementById('playersParentContainer')
       playersParentContainer.style.display = 'none'
+
+      const scoreCardParentContainer = document.getElementById('scoreCardParentContainer')
+      scoreCardParentContainer.style.display = 'flex'
+      scoreCardParentContainer.style.flexDirection = 'column'
       
       numberOfPlayers = parseInt(playerOption.textContent) // this updates the global variable
       // console.log('Selected Players:', numberOfPlayers)
@@ -544,6 +548,15 @@ function renderFrontNineTable() {
 
   const goBackButton = document.createElement('i')
   goBackButton.className = 'fa-solid fa-chevron-left color-lime pl-4 pr-4 pt-3 pb-3 bg-lime rounded-full'
+
+  goBackButton.addEventListener('click', () => {
+    const scoreCardParentContainer = document.getElementById('scoreCardParentContainer')
+    scoreCardParentContainer.style.display = 'none'
+
+    const playersParentContainer = document.getElementById('playersParentContainer')
+    playersParentContainer.style.display = 'flex'
+    playersParentContainer.style.flexDirection = 'column'
+  })
 
   ButtonsContainer.appendChild(goBackButton)
   scorecardContainer.appendChild(frontTable)
