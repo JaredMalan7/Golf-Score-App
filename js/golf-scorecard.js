@@ -81,6 +81,10 @@ async function populateCourseSelect() {
           const coursesParentContainer = document.getElementById('coursesParentContainer')
           coursesParentContainer.style.display = 'none'
 
+          const teeBoxParentContainer = document.getElementById('teeBoxParentContainer')
+          teeBoxParentContainer.style.display = 'flex'
+          teeBoxParentContainer.style.flexDirection = 'column'
+
           fetchCourseData(_course.id)
 
           renderTeeBoxes(_course.id)
@@ -158,6 +162,9 @@ async function renderTeeBoxes(courseId) {
 
               const teeBoxParentContainer = document.getElementById('teeBoxParentContainer')
               teeBoxParentContainer.style.display = 'none'
+
+
+
               handleTeeBoxSelect(teeBox)
               renderPlayerOptions()
             })
@@ -176,6 +183,15 @@ async function renderTeeBoxes(courseId) {
     
     const goBackButton = document.createElement('i')
     goBackButton.className = 'fa-solid fa-chevron-left color-lime pl-4 pr-4 pt-3 pb-3 bg-lime rounded-full'
+
+    goBackButton.addEventListener('click', () => {
+      const teeBoxParentContainer = document.getElementById('teeBoxParentContainer')
+      teeBoxParentContainer.style.display = 'none'
+
+      const coursesParentContainer = document.getElementById('coursesParentContainer')
+      coursesParentContainer.style.display = 'flex'
+      coursesParentContainer.style.flexDirection = 'column'
+    })
 
     ButtonsContainer.appendChild(goBackButton)
 
