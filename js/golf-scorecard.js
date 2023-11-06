@@ -322,6 +322,15 @@ function renderFrontNineTable() {
   const scorecardContainer = document.getElementById('front-nine-container')
   scorecardContainer.innerHTML = '' // Clear any existing content
 
+
+  const frontNineHeading = document.createElement('h1')
+  frontNineHeading.textContent = 'Scorecard Table'
+  frontNineHeading.className = 'text-center font-bold'
+
+  const scoreCardParentContainer = document.getElementById('scoreCardParentContainer')
+
+  scoreCardParentContainer.insertBefore(frontNineHeading, scoreCardParentContainer.firstChild)
+
   const frontTable = document.createElement('table')
   frontTable.classList.add('table', 'w-full')
   frontTable.id = 'frontHole'
@@ -570,6 +579,21 @@ function goInButton(){
   const goInButton = document.createElement('i')
   goInButton.className = 'fa-solid fa-chevron-right text-lime pl-4 pr-4 pt-3 pb-3 rounded-xl h-fit mt-auto mb-auto'
 
+  goInButton.addEventListener('click', () => {
+    const frontNineContainer = document.getElementById('front-nine-container')
+    const backNineContainer = document.getElementById('back-nine-container')
+    frontNineContainer.style.transition = "width 0.5s ease-in-out, padding 0.6s ease-in-out, opacity 0.4s ease-in-out"
+    backNineContainer.style.transition = "width 0.5s ease-in-out, padding 0.5s ease-in-out, opacity 0.5s ease-in-out"
+
+    frontNineContainer.style.width = '0'
+    frontNineContainer.style.overflow = 'hidden'
+
+    backNineContainer.style.width = '200%'
+    backNineContainer.style.overflowX = 'auto'
+    backNineContainer.style.whiteSpace = 'nowrap'
+    // backNineContainer.style.display = 'flex'
+  })
+
   ButtonsContainer.appendChild(goInButton)
 }
 
@@ -579,6 +603,22 @@ function goOutButton(){
 
   const goOutButton = document.createElement('i')
   goOutButton.className = 'fa-solid fa-chevron-left text-lime pl-4 pr-4 pt-3 pb-3 rounded-xl h-fit mt-auto mb-auto'
+
+  goOutButton.addEventListener('click', () => {
+    const frontNineContainer = document.getElementById('front-nine-container')
+    const backNineContainer = document.getElementById('back-nine-container')
+    frontNineContainer.style.transition = "width 0.5s ease-in-out, padding .6s ease-in-out, opacity 0.65s ease-in-out"
+    backNineContainer.style.transition = "width 0.5s ease-in-out, padding .6s ease-in-out, opacity 0.5s ease-in-out"
+
+    backNineContainer.style.overflow = 'hidden'
+    backNineContainer.style.width = '0'
+
+    frontNineContainer.style.width = '200%'
+    frontNineContainer.style.overflowX = 'auto'
+    frontNineContainer.style.whiteSpace = 'nowrap'
+  })
+
+
 
   ButtonsContainer.appendChild(goOutButton)
 }
