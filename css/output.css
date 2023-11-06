@@ -657,6 +657,10 @@ i:hover{
   width: 100%;
 }
 
+.w-0 {
+  width: 0px;
+}
+
 .min-w-\[256px\] {
   min-width: 256px;
 }

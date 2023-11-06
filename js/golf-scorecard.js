@@ -192,7 +192,7 @@ function handleTeeBoxSelect(teeBox) {
   // console.log('Updated selectedTeeBox:', selectedTeeBox) // Log the updated value
   if (teeBox.teeType) {
     // console.log('About to call renderFrontNineTable with selectedTeeBox:', selectedTeeBox)
-    renderFrontNineTable(); // Render the scorecard with the updated selectedTeeBox
+    // renderFrontNineTable()// Render the scorecard with the updated selectedTeeBox
   } else {
     console.log('teeBox.teeType is not available.')
   }
@@ -276,7 +276,8 @@ function generatePlayers() {
   // console.log(players)
 
   renderFrontNineTable()
-  forwardButton()
+  goInButton()
+  goOutButton()
   renderBackNineTable()
 }
 
@@ -520,7 +521,7 @@ function renderFrontNineTable() {
   // console.log(players)
 }
 
-function forwardButton(){
+function goInButton(){
   const ButtonsContainer = document.getElementById('front-nine-container')
   // ButtonsContainer.innerHTML = ''
 
@@ -530,12 +531,22 @@ function forwardButton(){
   ButtonsContainer.appendChild(goInButton)
 }
 
+function goOutButton(){
+  const ButtonsContainer = document.getElementById('back-nine-container')
+  ButtonsContainer.innerHTML = ''
+
+  const goOutButton = document.createElement('i')
+  goOutButton.className = 'fa-solid fa-chevron-left text-lime pl-4 pr-4 pt-3 pb-3 rounded-xl h-fit mt-auto mb-auto'
+
+  ButtonsContainer.appendChild(goOutButton)
+}
+
 // Call the function to render the scorecard table
 function renderBackNineTable() {
   console.log(players)
   // Select the scorecard container for the back nine
   const scorecardContainer = document.getElementById('back-nine-container')
-  scorecardContainer.innerHTML = '' // Clear any existing content
+  // scorecardContainer.innerHTML = '' // Clear any existing content
 
   const backTable = document.createElement('table')
   backTable.classList.add('table', 'w-full')
@@ -781,6 +792,7 @@ function renderBackNineTable() {
 
   scorecardContainer.appendChild(backTable)
 }
+
 
 
 // Function to handle player name editing
