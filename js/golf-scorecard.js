@@ -224,7 +224,7 @@ function getNextId(){
 }
 
 class Player {
-  constructor(name, id = getNextId(), scores = []) {
+  constructor(name, id = getNextId(), scores = new Array(18).fill(0)) {
     this.name = name;
     this.id = id;
     this.scores = scores;
@@ -311,15 +311,22 @@ function generatePlayers() {
   renderFrontNineTable()
   goInButton()
   goOutButton()
-  renderBackNineTable()
+  renderBackNineTable(Player)
 }
 
+let inColumn
 
 
-
+function calculateOutScore(player) {
+     return player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
+     }
+     
+function calculateInScore(player) {
+     return player.scores.slice(0, 18).reduce((total, score) => total + (score || 0), 0)
+   }
 //===========================================================
 //FUNCTION THAT BUILDS THE SCORECARD
-function renderFrontNineTable() {
+function renderFrontNineTable(inColumn) {
   // Select the scorecard container
   const scorecardContainer = document.getElementById('front-nine-container')
   scorecardContainer.innerHTML = '' // Clear any existing content
@@ -509,9 +516,7 @@ function renderFrontNineTable() {
     playerHeader.appendChild(playerNameDiv)
     playerRow.appendChild(playerHeader)
 
-    function calculateOutScore(player) {
-      return player.scores.slice(0, 9).reduce((total, score) => total + (score || 0), 0)
-    }
+
 
     let outColumn; // Define the outColumn here
 
@@ -520,6 +525,8 @@ function renderFrontNineTable() {
       playerColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents')
       const initialScore = player.scores[i] || ''
       playerColumn.textContent = initialScore
+     
+     
 
       if (i !== 9) {
         playerColumn.setAttribute('contenteditable', 'true')
@@ -529,8 +536,17 @@ function renderFrontNineTable() {
             event.target.textContent = ''
           } else {
             const newScore = parseInt(inputText)
+            
+            
             player.scores[i] = newScore
-            outColumn.textContent = calculateOutScore(player) // Update the Out column
+            const newTotal = calculateInScore(player)
+            console.log(newTotal)
+          //   inColumn.textContent = calculateInScore(player)
+          //   console.log(inColumn)
+            outColumn.textContent = calculateOutScore(player)
+             // Update the Out column
+
+
           }
         })
 
@@ -630,7 +646,7 @@ function goOutButton(){
 }
 
 // Call the function to render the scorecard table
-function renderBackNineTable() {
+function renderBackNineTable(inColumn) {
   console.log(players)
   // Select the scorecard container for the back nine
   const scorecardContainer = document.getElementById('back-nine-container')
@@ -811,11 +827,9 @@ function renderBackNineTable() {
     playerHeader.appendChild(playerNameDiv)
     playerRow.appendChild(playerHeader)
 
-    function calculateInScore(player) {
-      return player.scores.slice(0, 18).reduce((total, score) => total + (score || 0), 0)
-    }
+    
 
-    let inColumn; // Define the inColumn here
+    let inColumn // Define the inColumn here
 
     for (let i = 9; i < 18; i++) {
       const playerColumn = document.createElement('th')
@@ -849,6 +863,7 @@ function renderBackNineTable() {
         // Create the In Total column for the player
         inColumn = document.createElement('th')
         inColumn.classList.add('p-2', 'font-normal', 'border-l', 'border-l-accents', 'in-total-column')
+        inColumn.id ='finalScore'
         inColumn.textContent = calculateInScore(player)
         playerRow.appendChild(inColumn)
       }
@@ -880,8 +895,6 @@ function renderBackNineTable() {
 
   scorecardContainer.appendChild(backTable)
 }
-
-
 
 // Function to handle player name editing
 function handlePlayerNameEdit(player, playerIndex, newName) {

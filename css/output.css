@@ -579,10 +579,6 @@ i:hover{
   }
 }
 
-.visible {
-  visibility: visible;
-}
-
 .m-4 {
   margin: 1rem;
 }
@@ -656,6 +652,10 @@ i:hover{
   width: 33.333333%;
 }
 
+.w-\[200\%\] {
+  width: 200%;
+}
+
 .w-fit {
   width: -moz-fit-content;
   width: fit-content;
@@ -663,10 +663,6 @@ i:hover{
 
 .w-full {
   width: 100%;
-}
-
-.w-\[200\%\] {
-  width: 200%;
 }
 
 .min-w-\[256px\] {
@@ -701,12 +697,16 @@ i:hover{
   justify-content: center;
 }
 
-.overflow-auto {
-  overflow: auto;
-}
-
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
 }
 
 .rounded-full {
